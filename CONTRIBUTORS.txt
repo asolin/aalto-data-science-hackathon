@@ -1,0 +1,3 @@
+Arno Solin <arno.solin@aalto.fi>
+Eric Malmi <eric.malmi@aalto.fi>
+Jaakko Luttinen <jaakko.luttinen@aalto.fi>
