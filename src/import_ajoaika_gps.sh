@@ -9,10 +9,9 @@ rm -f .tmp/*
 # Create database
 cat create_ajoaika_gps.sqlite | sqlite3 $DB
 
-for ZIPFILE in $(ls -r $DATADIR/*.zip)
+for ZIPFILE in $(ls -r $DATADIR/*.zip | sort)
 do
-    # Unzip
-    #echo $ZIPFILE
+    # Unzip to temporary directory
     unzip $ZIPFILE -d .tmp
 
     # Import CSV to sqlite
@@ -21,6 +20,7 @@ do
     CMD=".mode csv\n.import $CSVFILE ajoaika_gps"
     echo -e $CMD | sqlite3 $DB
 
+    # Remove temporary file
     rm $CSVFILE
 done
 
