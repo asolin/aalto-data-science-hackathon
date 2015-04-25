@@ -112,6 +112,7 @@
     });
   };
 
+
   populateMap = function(type) {
     clearMap();
     if (type <= 4) {
@@ -119,53 +120,50 @@
       return createHeatMap(type);
     }
     else {
-      // TODO: ADD ROUTE PLOTTING STUFF HERE!
+      // TODO: ADD ROUTE PLOTTING CALLS HERE!
       console.error("Show route map type " + type);
-      //return getActivePaths(time + "hours+ago", function(time, json) {
-      //  return createPathsOnMap(time, json);
-      //});
+      time = 2;
+      return getActivePaths(time + "hours+ago", function(time, json) {
+        return createPathsOnMap(time, json);
+      });
     }
   };
 
-  drawHeatMap = function(data) {
 
+  drawHeatMap = function(data) {
     heatmap.setData(data);
     heatmap.setMap(map);
-    /*
-    var heatmap = new google.maps.visualization.HeatmapLayer({
-      map: map,
-      data: data,
-      dissipating: true,
-      //gradient: ,
-      //maxIntensity: ,
-      opacity: 0.7,
-      radius: 20
-    });
-//*/
   }
-  //*
+  
+
   createHeatMap = function(type) {
 
     $("#load-spinner").fadeIn(800);
     var heatMapData = [];
+    if (type == 1) {
+      json_file = "stop_1.json";
+    }
+    else if (type == 2) {
+      json_file = "cum_stop_times.json";
+    }
+    else if (type == 3) {
+      json_file = "avg_stop_delays.json";
+    }
+    else {
+      json_file = null;
+    }
     // Dynamic API:
     //return $.getJSON("" + hackAPI + "?heatmap").done(function(json) {
     // Static API:
-    return $.getJSON("stops.json").done(function(json) {
+    return $.getJSON(json_file).done(function(json) {
       if (json.length !== 0) {
         _.map(json, function(json_data) {
           for (i = 0; i < json_data.length; i++) {
-            //console.error("Debug: " + JSON.stringify(json_data[i]));
             var lat = json_data[i].coords[0];
             var lng = json_data[i].coords[1];
-            if (type == 1) {
-              var weight = 1;
-            }
-            else {
-              var weight = i*i*i*json_data[i].value[type-2];
-            }
+            var weight = json_data[i].value[0];
             heatMapData.push({location: new google.maps.LatLng(lng, lat),
-                              weight: weight});
+                              weight: Math.max(0, weight)});
           }
         });
         drawHeatMap(heatMapData);
@@ -176,7 +174,7 @@
     });
 
   };
-    //*/
+
 
   $(document).ready(function() {
     var clearUI;
