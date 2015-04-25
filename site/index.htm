@@ -17,9 +17,11 @@
     <div class="expanded">
       <div class="info-container" role="contentinfo">
         <button id="info-close">close</button>
-        <h1>#hackathon tests</h1>
+        <h1>Aalto Data Science Hackathon</h1>
         <p>
-          Lorem ipsum.
+          Team name: data & pizza => insights
+          <br />
+          Dataset: HSL
         </p>
         <p class="copyright">
           <a href="http://github.com/" target="_blank" title="Codes on Github">Codes</a><br/>
@@ -30,7 +32,7 @@
   <div id="visualization-button">&equiv;</div>
   <div id="visualization">
     <button id="visualization-close">Close</button>
-    <h2 class="no-top-margin">Options</h2>
+    <h2 class="no-top-margin">Visualizations</h2>
     <div id="load-spinner">
       <div id="followingBallsG_1" class="followingBallsG"></div>
       <div id="followingBallsG_2" class="followingBallsG"></div>
@@ -39,15 +41,13 @@
     </div>
     <nav id="time-filters">
       <ol role="navigation">
-        <li data-hours="1">1 tunti</li>
-        <li data-hours="2">2 tuntia</li>
-        <li data-hours="8" class="active">8 tuntia</li>
-        <li data-hours="12">12 tuntia</li>
-        <li data-hours="24">24 tuntia</li>
-        <li data-hours="72">3 vuorokautta</li>
-        <li data-hours="168">1 viikko</li>
+        <li data-visualization="1" class="active">Bus stop density</li> <br/>
+        <li data-visualization="2">Bus stop traffic/time</li> <br />
+        <li data-visualization="3">Another heat map?</li> <br />
+        <li data-visualization="4">Yet another heat map?</li> <br />
       </ol>
     </nav>
+    <!--
     <div id="notification"></div>
     <h2>Värien merkitykset</h2>
     <ul class="legend">
@@ -64,11 +64,15 @@
       <li class="hs" data-job="hs" data-selected="true">Höyläys</li>
       <li class="pe" data-job="pe" data-selected="true">Pesu</li>
     </ul>
+    -->
   </div>
 
   <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
   <script src="js/lib/lodash.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  <!-- <script src="js/lib/heatmap.js"></script>
+  <script src="js/lib/gmaps-heatmap.js"></script> -->
+  <script src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
