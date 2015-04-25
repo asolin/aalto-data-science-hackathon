@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="IE=edge">
+  <title>#hackathon</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Exo+2:400,800" rel="stylesheet" type="text/css" />
+  <link href="css/main.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+  <div id="map-canvas"></div>
+  <div id="info">
+    <div id="info-button">info</div>
+    <div class="expanded">
+      <div class="info-container" role="contentinfo">
+        <button id="info-close">close</button>
+        <h1>#hackathon tests</h1>
+        <p>
+          Lorem ipsum.
+        </p>
+        <p class="copyright">
+          <a href="http://github.com/" target="_blank" title="Codes on Github">Codes</a><br/>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div id="visualization-button">&equiv;</div>
+  <div id="visualization">
+    <button id="visualization-close">Close</button>
+    <h2 class="no-top-margin">Options</h2>
+    <div id="load-spinner">
+      <div id="followingBallsG_1" class="followingBallsG"></div>
+      <div id="followingBallsG_2" class="followingBallsG"></div>
+      <div id="followingBallsG_3" class="followingBallsG"></div>
+      <div id="followingBallsG_4" class="followingBallsG"></div>
+    </div>
+    <nav id="time-filters">
+      <ol role="navigation">
+        <li data-hours="1">1 tunti</li>
+        <li data-hours="2">2 tuntia</li>
+        <li data-hours="8" class="active">8 tuntia</li>
+        <li data-hours="12">12 tuntia</li>
+        <li data-hours="24">24 tuntia</li>
+        <li data-hours="72">3 vuorokautta</li>
+        <li data-hours="168">1 viikko</li>
+      </ol>
+    </nav>
+    <div id="notification"></div>
+    <h2>Värien merkitykset</h2>
+    <ul class="legend">
+      <li class="kv" data-job="kv" data-selected="true">Pyöräily-/kävelyväylien huolto</li>
+      <li class="hi" data-job="hi" data-selected="true">Hiekoitus</li>
+      <li class="su" data-job="su" data-selected="true">Suolaus</li>
+      <li class="au" data-job="au" data-selected="true">Auraus</li>
+      <li class="other" data-job="nt, hs, ln" data-selected="true">Muu</li>
+    </ul>
+    <h2>Lisäksi kesällä</h2>
+    <ul class="legend">
+      <li class="hn" data-job="hn" data-selected="true">Hiekanpoisto</li>
+      <li class="ps" data-job="ps" data-selected="true">Pölynsidonta</li>
+      <li class="hs" data-job="hs" data-selected="true">Höyläys</li>
+      <li class="pe" data-job="pe" data-selected="true">Pesu</li>
+    </ul>
+  </div>
+
+  <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+  <script src="js/lib/lodash.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
