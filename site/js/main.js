@@ -7,13 +7,21 @@
   activePolylines = [];
 
   map = null;
+  heatmap = new google.maps.visualization.HeatmapLayer({
+      dissipating: true,
+      //gradient: ,
+      //maxIntensity: ,
+      opacity: 0.7,
+      radius: 20
+    });
 
   initializeGoogleMaps = function(callback, time) {
     var helsinkiCenter, mapOptions, styles;
-    helsinkiCenter = new google.maps.LatLng(60.193084, 24.940338);
+    helsinkiCenter = new google.maps.LatLng(60.21, 24.940338);
+    //helsinkiCenter = new google.maps.LatLng(60.193084, 24.940338);
     mapOptions = {
       center: helsinkiCenter,
-      zoom: 13,
+      zoom: 12,
       disableDefaultUI: true,
       zoomControl: true,
       zoomControlOptions: {
@@ -58,6 +66,7 @@
   };
 
   clearMap = function() {
+    heatmap.set('data', null);
     return _.map(activePolylines, function(polyline) {
       return polyline.setMap(null);
     });
@@ -103,12 +112,71 @@
     });
   };
 
-  populateMap = function(time) {
+  populateMap = function(type) {
     clearMap();
-    return getActivePaths(time + "hours+ago", function(time, json) {
-      return createPathsOnMap(time, json);
-    });
+    if (type <= 4) {
+      console.error("Show heat map type " + type);
+      return createHeatMap(type);
+    }
+    else {
+      // TODO: ADD ROUTE PLOTTING STUFF HERE!
+      console.error("Show route map type " + type);
+      //return getActivePaths(time + "hours+ago", function(time, json) {
+      //  return createPathsOnMap(time, json);
+      //});
+    }
   };
+
+  drawHeatMap = function(data) {
+
+    heatmap.setData(data);
+    heatmap.setMap(map);
+    /*
+    var heatmap = new google.maps.visualization.HeatmapLayer({
+      map: map,
+      data: data,
+      dissipating: true,
+      //gradient: ,
+      //maxIntensity: ,
+      opacity: 0.7,
+      radius: 20
+    });
+//*/
+  }
+  //*
+  createHeatMap = function(type) {
+
+    $("#load-spinner").fadeIn(800);
+    var heatMapData = [];
+    // Dynamic API:
+    //return $.getJSON("" + hackAPI + "?heatmap").done(function(json) {
+    // Static API:
+    return $.getJSON("stops.json").done(function(json) {
+      if (json.length !== 0) {
+        _.map(json, function(json_data) {
+          for (i = 0; i < json_data.length; i++) {
+            //console.error("Debug: " + JSON.stringify(json_data[i]));
+            var lat = json_data[i].coords[0];
+            var lng = json_data[i].coords[1];
+            if (type == 1) {
+              var weight = 1;
+            }
+            else {
+              var weight = i*i*i*json_data[i].value[type-2];
+            }
+            heatMapData.push({location: new google.maps.LatLng(lng, lat),
+                              weight: weight});
+          }
+        });
+        drawHeatMap(heatMapData);
+        return $("#load-spinner").fadeOut(800);
+      }
+    }).fail(function(error) {
+      return console.error("Failed to create heat map: " + (JSON.stringify(error)));
+    });
+
+  };
+    //*/
 
   $(document).ready(function() {
     var clearUI;
@@ -119,14 +187,14 @@
     if (localStorage["auratkartalla.userHasClosedInfo"]) {
       $("#info").addClass("off");
     }
-    initializeGoogleMaps(populateMap, 8);
+    initializeGoogleMaps(populateMap, 1);
     $("#time-filters li").on("click", function(e) {
       e.preventDefault();
       clearUI();
       $("#time-filters li").removeClass("active");
       $(e.currentTarget).addClass("active");
       $("#visualization").removeClass("on");
-      return populateMap($(e.currentTarget).data("hours"));
+      return populateMap($(e.currentTarget).data("visualization"));
     });
     $("#info-close, #info-button").on("click", function(e) {
       e.preventDefault();
