@@ -2,7 +2,7 @@
 (function() {
   var activePolylines, addMapLine, clearMap, createIndividualPathTrail, createPathsOnMap, displayNotification, getActivePaths, getPathJobColor, initializeGoogleMaps, map, populateMap, hackAPI;
 
-  hackAPI = "http://dev.hel.fi/aura/v1/snowplow/";
+  hackAPI = "http://dev.hel.fi/aura/v1/snowplow/data";
 
   activePolylines = [];
 
@@ -28,32 +28,20 @@
     return callback(time);
   };
 
-  getPathJobColor = function(job) {
-    switch (job) {
-      case "kv":
-        return "#84ff00";
-      case "au":
-        return "#f2c12e";
-      case "su":
-        return "#d93425";
-      case "hi":
-        return "#ffffff";
-      case "hn":
-        return "#00a59b";
-      case "hs":
-        return "#910202";
-      case "ps":
-        return "#970899";
-      case "pe":
-        return "#132bbe";
-      default:
-        return "#6c00ff";
-    }
+  getPathColor = function(value) {
+
+    return "#" + ("00" + Math.floor(parseInt('00',16) + value / 100 * parseInt('ff',16)).toString(16)).slice(-2) + "00ff";
+
+//    if (value > 50) {
+//      return "#84ff00";
+//    } else {
+//      return "#d93425";
+//    }
   };
 
-  addMapLine = function(PathData, PathJobId) {
+  addMapLine = function(PathData, value) {
     var PathTrailColor, polyline, polylinePath;
-    PathTrailColor = getPathJobColor(PathJobId);
+    PathTrailColor = getPathColor(value);
     polylinePath = _.reduce(PathData, (function(accu, x) {
       accu.push(new google.maps.LatLng(x.coords[1], x.coords[0]));
       return accu;
@@ -62,8 +50,8 @@
       path: polylinePath,
       geodesic: true,
       strokeColor: PathTrailColor,
-      strokeWeight: 1.5,
-      strokeOpacity: 0.6
+      strokeWeight: 2,
+      strokeOpacity: 0.8
     });
     activePolylines.push(polyline);
     return polyline.setMap(map);
@@ -83,39 +71,35 @@
 
   getActivePaths = function(time, callback) {
     $("#load-spinner").fadeIn(400);
-    return $.getJSON(hackAPI + "?since=" + time + "&location_history=1").done(function(json) {
+    return $.getJSON("routes.json").done(function(json) {
       if (json.length !== 0) {
         callback(time, json);
       } else {
-        displayNotification("Ei näytettävää valitulla ajalla");
+        displayNotification("No routes to show.");
       }
       return $("#load-spinner").fadeOut(800);
     }).fail(function(error) {
-      return console.error("Failed to fetch active hackPaths: " + (JSON.stringify(error)));
+      return console.error("Failed to fetch paths: " + (JSON.stringify(error)));
     });
   };
 
-  createIndividualPathTrail = function(time, PathId, historyData) {
+  createIndividualPathTrail = function(value, PathId, historyData) {
     $("#load-spinner").fadeIn(800);
-    return $.getJSON("" + hackAPI + PathId + "?since=" + time + "&temporal_resolution=4").done(function(json) {
+    return $.getJSON("route-"+PathId+".json").done(function(json) {
       if (json.length !== 0) {
-        _.map(json, function(oneJobOfThisPath) {
-          var PathHasLastGoodEvent;
-          PathHasLastGoodEvent = (oneJobOfThisPath != null) && (oneJobOfThisPath[0] != null) && (oneJobOfThisPath[0].events != null) && (oneJobOfThisPath[0].events[0] != null);
-          if (PathHasLastGoodEvent) {
-            return addMapLine(oneJobOfThisPath, oneJobOfThisPath[0].events[0]);
-          }
+        _.map(json, function(onepath) {
+            return addMapLine(onepath, value);
         });
         return $("#load-spinner").fadeOut(800);
       }
     }).fail(function(error) {
-      return console.error("Failed to create hackPath trail for Path " + PathId + ": " + (JSON.stringify(error)));
+      return console.error("Failed to create path " + PathId + ": " + (JSON.stringify(error)));
     });
   };
 
   createPathsOnMap = function(time, json) {
     return _.each(json, function(x) {
-      return createIndividualPathTrail(time, x.id, json);
+      return createIndividualPathTrail(x.value, x.id, json);
     });
   };
 
