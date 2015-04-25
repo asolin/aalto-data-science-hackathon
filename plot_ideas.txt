@@ -1,0 +1,20 @@
+HEAT MAPS
+---------
+
+* stops
+
+* total time spent on stops
+
+ROUTE MAPS
+----------
+
+* bus frequency
+
+* bus delay changes
+
+PCA PLOTS
+---------
+
+* average "etappi" time and/or average "etappi delay (hourly window and weekly aggregation)
+
+* time busses have spent on a stop (characterizes the amount of traffic) (hourly window and weekly aggregation)
