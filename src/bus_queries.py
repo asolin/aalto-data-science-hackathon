@@ -53,10 +53,39 @@ def save_json(ts, filename):
     with open(filename, 'w') as outfile:
         json.dump({"stops": x}, outfile)
 
+def save_multi_json(ts, filename):
+    values = {}
+    for row in ts:
+        sid = row[0]
+        hour = row[1]
+        val = row[2]
+        if str(sid) not in stop_coords:
+            print "Missing stop id:", sid
+            continue
+        if sid not in values:
+            values[sid] = [0] * 24
+        values[sid][hour-1] = val
+    x = []
+    for sid, vals in values.iteritems():
+        x.append({"id":sid, "coords":stop_coords[str(sid)], "value":vals})
+    with open(filename, 'w') as outfile:
+        json.dump({"stops": x}, outfile)
+
+def save_route_json(ts, filename):
+    x = []
+    for row in ts:
+        sid = row[0:2]
+        #if str(sid) not in stop_coords:
+        #    print "Missing stop id:", sid
+        #    continue
+        x.append({"id":sid, "value":[row[2]]})
+    with open(filename, 'w') as outfile:
+        json.dump({"routes": x}, outfile)
+
 def get_stop_times():
     cols = [trips.c.tulopysakki, func.sum(trips.c.pysakkiaika).label('stop_sum')]
     conds = and_(*conditions)
-    groupcols = trips.c.tulopysakki
+    groupcols = [trips.c.tulopysakki]
     ts = run(cols, conds, groupcols, n_limit=None)
     save_json(ts, "../site/cum_stop_times.json")
 
@@ -82,7 +111,7 @@ def get_stop_time_matrix():
 def get_stop_delays():
     cols = [trips.c.tulopysakki, func.avg(trips.c.ohitusaika_ero).label('delay_avg')]
     conds = and_(*conditions)
-    groupcols = trips.c.tulopysakki
+    groupcols = [trips.c.tulopysakki]
     ts = run(cols, conds, groupcols, n_limit=None)
     save_json(ts, "../site/avg_stop_delays.json")
 
@@ -91,6 +120,72 @@ def get_stop_locations():
     for sid in stop_coords.iterkeys():
         ts.append((sid,1))
     save_json(ts, "../site/stop_1.json")
+
+def get_route_delays():
+    cols = [trips.c.tulopysakki, trips.c.lahtopysakki, func.avg(trips.c.ohitusaika_ero).label('delay_avg')]
+    conds = and_(*conditions)
+    groupcols = [trips.c.tulopysakki, trips.c.lahtopysakki]
+    ts = run(cols, conds, groupcols, n_limit=None)
+    save_route_json(ts, "../site/avg_route_dest_delay.json")
+
+def get_route_dest_delay_matrix():
+    weekhour = func.strftime('%w', trips.c.tapahtumapaiva) * 24 + func.cast(func.substr(trips.c.tuloaika_time,1,2), sa.Integer)
+    cols = [trips.c.tulopysakki,
+            trips.c.lahtopysakki,
+            weekhour,
+            func.sum(trips.c.pysakkiaika).label('stop_sum')]
+    conds = and_(*conditions)
+    groupcols = [trips.c.tulopysakki, trips.c.lahtopysakki, weekhour]
+    ts = run(cols, conds, groupcols, n_limit=None)
+    # Write to a csv file
+    stops = list(set([(val[0], val[1]) for val in ts]))
+    stop_map = {v: idx for (idx, v) in enumerate(stops)}
+    mat = np.zeros((168, len(stops)))
+    for val in ts:
+        stop = (val[0], val[1])
+        wh = val[2]
+        value = val[3]
+        mat[wh, stop_map[stop]] = value
+    with open('../site/route_dest_delay_matrix.csv', 'w') as f:
+        route_strs = ["%d-%d" % (val[0], val[1]) for val in stops]
+        f.write(",".join(route_strs) + '\n')
+        for i in range(mat.shape[0]):
+            f.write(",".join(map(str, mat[i,:])) + '\n')
+
+def analyze_day(day = "2014-08-22"):
+    hour = func.cast(func.substr(trips.c.joreohitusaika_time,1,2), sa.Integer)
+    cols = [trips.c.tulopysakki, hour, func.avg(trips.c.ohitusaika_ero).label('delay_avg')]
+    new_conds = conditions
+    new_conds.append(trips.c.tapahtumapaiva==day)
+    conds = and_(*new_conds)
+    groupcols = [trips.c.tulopysakki, hour]
+    ts = run(cols, conds, groupcols, n_limit=None)
+    save_multi_json(ts, "../site/hourly_stop_delays_%s.json" % day)
+    
+
+def get_delay_histogram():
+    bucket = func.round(trips.c.ohitusaika_ero/10)*10
+    #n = func.count('*').label('cnt')
+    cols = [bucket, func.count()]
+    new_conds = conditions
+    #new_conds.append(n >= -2000)
+    #new_conds.append(n <= 2000)
+    conds = and_(*new_conds)
+    groupcols = [bucket]
+    ts = run(cols, conds, groupcols, n_limit=None)
+    # Write to a csv file
+    with open("../data/wait_histogram.csv","w") as f:
+        for val in ts:
+            f.write("%d,%d\n" % (val[0], val[1]))
+
+def plot_histogram():
+    x = np.loadtxt("../data/wait_histogram.csv", delimiter=',')
+    x = x[np.logical_and(x[:,0]>=-2000, x[:,0]<=2000),:]
+    import matplotlib.pyplot as plt
+    plt.plot(x[:,0], x[:,1], '-')
+    plt.xlim(-300,600)
+    plt.xlabel('Delay')
+    plt.show()
 
 if __name__ == "__main__":
     get_avg()
