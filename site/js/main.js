@@ -18,7 +18,6 @@
   initializeGoogleMaps = function(callback, visualization, json_file, index) {
     var helsinkiCenter, mapOptions, styles;
     helsinkiCenter = new google.maps.LatLng(60.21, 24.940338);
-    //helsinkiCenter = new google.maps.LatLng(60.193084, 24.940338);
     mapOptions = {
       center: helsinkiCenter,
       zoom: 12,
@@ -211,11 +210,11 @@
     return $notification.empty().text(notificationText).slideDown(800).delay(5000).slideUp(800);
   };
 
-  getActivePaths = function(time, callback) {
+  getActivePaths = function(routemap, index, callback) {
     $("#load-spinner").fadeIn(400);
-    return $.getJSON("routes.json").done(function(json) {
+    return $.getJSON(routemap).done(function(json) {
       if (json.length !== 0) {
-        callback(time, json);
+        callback(index, json);
       } else {
         displayNotification("No routes to show.");
       }
@@ -225,9 +224,9 @@
     });
   };
 
-  createIndividualPathTrail = function(value, PathId, historyData) {
+  createIndividualPathTrail = function(value, StopId1, StopId2, historyData) {
     $("#load-spinner").fadeIn(800);
-    return $.getJSON("routes/route-"+PathId+".json").done(function(json) {
+    return $.getJSON("routes/route-"+StopId1+"-"+StopId2+".json").done(function(json) {
       if (json.length !== 0) {
         _.map(json, function(onepath) {
             return addMapLine(onepath, value);
@@ -235,16 +234,16 @@
         return $("#load-spinner").fadeOut(800);
       }
     }).fail(function(error) {
-      return console.error("Failed to create path " + PathId + ": " + (JSON.stringify(error)));
+      return console.error("Failed to create path " + StopId1 + "-" + StopId2 + ": " + (JSON.stringify(error)));
     });
   };
 
-  createPathsOnMap = function(time, json) {
+  createPathsOnMap = function(index, json) {
     return _.each(json, function(x) {
-      return createIndividualPathTrail(x.value, x.id, json);
+      //console.error("Path: " + x.value[0] + " " + x.id[0] + " " + x.id);
+      return createIndividualPathTrail(x.value[index], x.id[0], x.id[1], json);
     });
   };
-
 
   populateMap = function(visualization, json_file, index) {
     clearMap();
@@ -253,15 +252,12 @@
       return createHeatMap(json_file, index);
     }
     else {
-      // TODO: ADD ROUTE PLOTTING CALLS HERE!
-      console.error("Show route map type " + type);
-      time = 2;
-      return getActivePaths(time + "hours+ago", function(time, json) {
-        return createPathsOnMap(time, json);
+      console.error("Show route map type " + visualization + " " + json_file + " index " + index);
+      return getActivePaths(json_file, index, function(index, json) {
+        return createPathsOnMap(index, json);
       });
     }
   };
-
 
   drawHeatMap = function(data) {
     heatmap.setData(data);
@@ -303,7 +299,7 @@
       $("#notification").stop(true, false).slideUp(200);
       return $("#load-spinner").stop(true, false).fadeOut(200);
     };
-    if (localStorage["auratkartalla.userHasClosedInfo"]) {
+    if (localStorage["hackathon.userHasClosedInfo"]) {
       $("#info").addClass("off");
     }
     initializeGoogleMaps(populateMap, "heatmap", "stop_1.json", 0);
@@ -323,7 +319,7 @@
     $("#info-close, #info-button").on("click", function(e) {
       e.preventDefault();
       $("#info").toggleClass("off");
-      return localStorage["auratkartalla.userHasClosedInfo"] = true;
+      return localStorage["hackathon.userHasClosedInfo"] = true;
     });
     return $("#visualization-close, #visualization-button").on("click", function(e) {
       e.preventDefault();
