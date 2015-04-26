@@ -196,3 +196,32 @@ def plot_ts(X):
                     'Fri', '12:00',
                     'Sat', '12:00'])
         plt.xlim([0, 7*24-1])
+
+
+def save_plot_ts(X, base_filename):
+    if X.columns[0] == 'coords':
+        N = len(X.columns) - 1
+    else:
+        N = len(X.columns)
+
+    fig = plt.figure(figsize=(30,3))
+    for i in range(N):
+        fig.clf()
+        plt.plot(X[i], 'k-', linewidth=3)
+        plt.yticks([0])
+        plt.xticks([0, 0.5*24,
+                    1*24, 1.5*24,
+                    2*24, 2.5*24,
+                    3*24, 3.5*24,
+                    4*24, 4.5*24,
+                    5*24, 5.5*24,
+                    6*24, 6.5*24],
+                   ['Sun', '12:00',
+                    'Mon', '12:00',
+                    'Tue', '12:00',
+                    'Wed', '12:00',
+                    'Thu', '12:00',
+                    'Fri', '12:00',
+                    'Sat', '12:00'])
+        plt.xlim([0, 7*24-1])
+        plt.savefig(base_filename + str(i) + ".png", bbox_inches='tight', transparent=True)
