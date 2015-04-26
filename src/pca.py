@@ -162,8 +162,7 @@ def analyse_routes(filename, K, method='pca'):
         pca_routes = B
 
     # Scale values to [-1, 1]
-    pca_routes = pca_routes / np.max(np.abs(routes))
-    pca
+    pca_routes = pca_routes / np.max(np.abs(pca_routes))
 
     # Label PCA time series elements
     pca_timeseries = pd.DataFrame(A)
