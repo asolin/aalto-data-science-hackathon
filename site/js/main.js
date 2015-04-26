@@ -240,7 +240,6 @@
 
   createPathsOnMap = function(index, json) {
     return _.each(json, function(x) {
-      //console.error("Path: " + x.value[0] + " " + x.id[0] + " " + x.id);
       return createIndividualPathTrail(x.value[index], x.id[0], x.id[1], json);
     });
   };
@@ -303,15 +302,18 @@
       $("#info").addClass("off");
     }
     initializeGoogleMaps(populateMap, "heatmap", "stop_1.json", 0);
+    $("#explanation").html($("#time-filters li").filter(".active").data("description"));
     $("#time-filters li").on("click", function(e) {
       e.preventDefault();
       clearUI();
       $("#time-filters li").removeClass("active");
       $(e.currentTarget).addClass("active");
       $("#visualization").removeClass("on");
+      $("#explanation").html(""+$(e.currentTarget).data("description"));
       console.error("" + $(e.currentTarget).data("visualization") +
                          $(e.currentTarget).data("json") +
-                    $(e.currentTarget).data("index"))
+                         $(e.currentTarget).data("index") +
+                         $(e.currentTarget).data("description"));
       return populateMap($(e.currentTarget).data("visualization"),
                          $(e.currentTarget).data("json"),
                          $(e.currentTarget).data("index"));
