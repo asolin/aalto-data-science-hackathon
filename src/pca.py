@@ -204,7 +204,7 @@ def save_plot_ts(X, base_filename):
     else:
         N = len(X.columns)
 
-    fig = plt.figure(figsize=(20, 2))
+    fig = plt.figure(figsize=(15, 1.5))
     for i in range(N):
         fig.clf()
         plt.plot(X[i], 'k-', linewidth=3)
