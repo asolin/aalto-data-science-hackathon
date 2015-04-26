@@ -6,3 +6,7 @@ _Team "data & pizza => insights" contribution to [Aalto Data Science Hackathon 2
 This is a visual data exploration tool to bus delay data provided by [HSL](http://dev.hsl.fi/) in Helsinki, Finland. 
 
 Our set of tools include: SQLite, Python, and the Google Maps Api. We also used the [gtfs_SQL_importer](https://github.com/cbick/gtfs_SQL_importer) (with minor modifications). The website design was inspired by the [auratkartalla.com](http://www.auratkartalla.com/) web pages.
+
+## Howto
+
+The web pages rendering the visualisations are under `site/`. The backend is built upon a set of static JSON files.
