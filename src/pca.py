@@ -78,7 +78,7 @@ def save_routes_to_json(X, filename):
     f.write('[')
     for i in range(len(X)):
         f.write('{')
-        (from_stop, to_stop) = X.index[0].split('-')
+        (from_stop, to_stop) = X.index[i].split('-')
         from_stop = int(from_stop)
         to_stop = int(to_stop)
         f.write('"id": [{0}, {1}], "value": ['.format(from_stop,
