@@ -56,8 +56,8 @@ def save_maps_to_json(X, filename):
     for i in range(len(X)):
         f.write('{')
         f.write('"id": {0}, "coords": [{1}, {2}], "value": ['.format(X.iloc[i].name,
-                                                                     X.iloc[i].coords[0],
-                                                                     X.iloc[i].coords[1]))
+                                                                     X.iloc[i].coords[1],
+                                                                     X.iloc[i].coords[0]))
         for j in range(len(X.iloc[i].values)-2):
             f.write('{0}, '.format(X.iloc[i][j]))
         f.write('{0}]'.format(X.iloc[i][j+1]))
