@@ -15,7 +15,7 @@
       radius: 20
     });
 
-  initializeGoogleMaps = function(callback, time) {
+  initializeGoogleMaps = function(callback, visualization, json_file, index) {
     var helsinkiCenter, mapOptions, styles;
     helsinkiCenter = new google.maps.LatLng(60.21, 24.940338);
     //helsinkiCenter = new google.maps.LatLng(60.193084, 24.940338);
@@ -33,7 +33,7 @@
     map.setOptions({
       styles: styles
     });
-    return callback(time);
+    return callback(visualization, json_file, index);
   };
 
   getPathColor = function(value) {
@@ -113,11 +113,11 @@
   };
 
 
-  populateMap = function(type) {
+  populateMap = function(visualization, json_file, index) {
     clearMap();
-    if (type <= 4) {
-      console.error("Show heat map type " + type);
-      return createHeatMap(type);
+    if (visualization == "heatmap") {
+      console.error("Show heat map for " + json_file + " index " + index);
+      return createHeatMap(json_file, index);
     }
     else {
       // TODO: ADD ROUTE PLOTTING CALLS HERE!
@@ -136,22 +136,10 @@
   }
   
 
-  createHeatMap = function(type) {
+  createHeatMap = function(json_file, index) {
 
     $("#load-spinner").fadeIn(800);
     var heatMapData = [];
-    if (type == 1) {
-      json_file = "stop_1.json";
-    }
-    else if (type == 2) {
-      json_file = "cum_stop_times.json";
-    }
-    else if (type == 3) {
-      json_file = "avg_stop_delays.json";
-    }
-    else {
-      json_file = null;
-    }
     // Dynamic API:
     //return $.getJSON("" + hackAPI + "?heatmap").done(function(json) {
     // Static API:
@@ -161,7 +149,7 @@
           for (i = 0; i < json_data.length; i++) {
             var lat = json_data[i].coords[0];
             var lng = json_data[i].coords[1];
-            var weight = json_data[i].value[0];
+            var weight = json_data[i].value[index];
             heatMapData.push({location: new google.maps.LatLng(lng, lat),
                               weight: Math.max(0, weight)});
           }
@@ -185,14 +173,19 @@
     if (localStorage["auratkartalla.userHasClosedInfo"]) {
       $("#info").addClass("off");
     }
-    initializeGoogleMaps(populateMap, 1);
+    initializeGoogleMaps(populateMap, "heatmap", "stop_1.json", 0);
     $("#time-filters li").on("click", function(e) {
       e.preventDefault();
       clearUI();
       $("#time-filters li").removeClass("active");
       $(e.currentTarget).addClass("active");
       $("#visualization").removeClass("on");
-      return populateMap($(e.currentTarget).data("visualization"));
+      console.error("" + $(e.currentTarget).data("visualization") +
+                         $(e.currentTarget).data("json") +
+                    $(e.currentTarget).data("index"))
+      return populateMap($(e.currentTarget).data("visualization"),
+                         $(e.currentTarget).data("json"),
+                         $(e.currentTarget).data("index"));
     });
     $("#info-close, #info-button").on("click", function(e) {
       e.preventDefault();
