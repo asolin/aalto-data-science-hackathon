@@ -164,8 +164,8 @@ def analyze_day(day = "2014-08-22"):
     
 
 def get_delay_histogram():
-    bucket = func.round(trips.c.ohitusaika_ero/10)*10
-    #n = func.count('*').label('cnt')
+    #bucket = func.round(trips.c.ohitusaika_ero/10)*10
+    bucket = trips.c.ohitusaika_ero
     cols = [bucket, func.count()]
     new_conds = conditions
     #new_conds.append(n >= -2000)
@@ -174,17 +174,25 @@ def get_delay_histogram():
     groupcols = [bucket]
     ts = run(cols, conds, groupcols, n_limit=None)
     # Write to a csv file
-    with open("../data/wait_histogram.csv","w") as f:
+    with open("../data/wait_histogram1.csv","w") as f:
         for val in ts:
             f.write("%d,%d\n" % (val[0], val[1]))
 
 def plot_histogram():
-    x = np.loadtxt("../data/wait_histogram.csv", delimiter=',')
-    x = x[np.logical_and(x[:,0]>=-2000, x[:,0]<=2000),:]
+    x = np.loadtxt("../data/wait_histogram1.csv", delimiter=',')
+    #x = x[np.logical_and(x[:,0]>=-2000, x[:,0]<=2000),:]
     import matplotlib.pyplot as plt
-    plt.plot(x[:,0], x[:,1], '-')
-    plt.xlim(-300,600)
-    plt.xlabel('Delay')
+    y = np.cumsum(x[:,1])
+    y = y / y[-1]
+    plt.plot(x[:,0]/60.0, y, '-', linewidth=2)
+    plt.rcParams.update({'font.size': 14})
+    xmax = 5
+    plt.xlim(-5,xmax)
+    plt.xticks(np.arange(-5,xmax+0.1,1))
+    plt.yticks(np.arange(0,1.01,0.1))
+    plt.xlabel('Arrival to stop (min)')
+    plt.ylabel('Bus missing probability')
+    plt.grid()
     plt.show()
 
 if __name__ == "__main__":
