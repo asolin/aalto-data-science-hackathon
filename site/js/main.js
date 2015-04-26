@@ -324,6 +324,7 @@
     }
     initializeGoogleMaps(populateMap, "heatmap", "stop_1.json", 0);
     $("#explanation").html($("#time-filters li").filter(".active").data("description"));
+    $("#figure").attr("src",$("#time-filters li").filter(".active").data("fig"));
     $("#time-filters li").on("click", function(e) {
       e.preventDefault();
       clearUI();
