@@ -10,3 +10,7 @@ Our set of tools include: SQLite, Python, and the Google Maps Api. We also used 
 ## Howto
 
 The web pages rendering the visualisations are under `site/`. The backend is built upon a set of static JSON files.
+
+## Example
+
+You can try out the site by pointing your browser to: [http://asolin.github.io/aalto-data-science-hackathon/](http://asolin.github.io/aalto-data-science-hackathon/).
