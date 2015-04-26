@@ -29,6 +29,124 @@
         position: google.maps.ControlPosition.RIGHT_BOTTOM
       }
     };
+    styles = [
+    {
+        "featureType": "landscape",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 65
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 51
+            },
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 30
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 40
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative.province",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "labels",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "lightness": -25
+            },
+            {
+                "saturation": -100
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "hue": "#ffff00"
+            },
+            {
+                "lightness": -25
+            },
+            {
+                "saturation": -97
+            }
+        ]
+    }
+    ];
     map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
     map.setOptions({
       styles: styles
@@ -36,20 +154,35 @@
     return callback(time);
   };
 
-  getPathColor = function(value) {
+  getColormap = function(v, vmin, vmax) {
+    var r=1.0,g=1.0,b=1.0,dv;
+    if (v < vmin)
+      v = vmin;
+    if (v > vmax)
+      v = vmax;
+    dv = vmax - vmin;
+    if (v < (vmin + 0.25 * dv)) {
+      r = 0.0;
+      g = 4.0 * (v - vmin) / dv;
+    } else if (v < (vmin + 0.5 * dv)) {
+      r = 0.0;
+      b = 1.0 + 4.0 * (vmin + 0.25 * dv - v) / dv;
+    } else if (v < (vmin + 0.75 * dv)) {
+      r = 4.0 * (v - vmin - 0.5 * dv) / dv;
+      b = 0.0;
+    } else {
+      g = 1.0 + 4.0 * (vmin + 0.75 * dv - v) / dv;
+      b = 0.0;
+    }
+    return("#"+("00"+(Math.floor(255*r)).toString(16)).slice(-2)
+              +("00"+(Math.floor(255*g)).toString(16)).slice(-2)
+              +("00"+(Math.floor(255*b)).toString(16)).slice(-2));
+  }
 
-    return "#" + ("00" + Math.floor(parseInt('00',16) + value / 100 * parseInt('ff',16)).toString(16)).slice(-2) + "00ff";
-
-//    if (value > 50) {
-//      return "#84ff00";
-//    } else {
-//      return "#d93425";
-//    }
-  };
 
   addMapLine = function(PathData, value) {
     var PathTrailColor, polyline, polylinePath;
-    PathTrailColor = getPathColor(value);
+    PathTrailColor = getColormap(value,0,100);
     polylinePath = _.reduce(PathData, (function(accu, x) {
       accu.push(new google.maps.LatLng(x.coords[1], x.coords[0]));
       return accu;
@@ -58,8 +191,8 @@
       path: polylinePath,
       geodesic: true,
       strokeColor: PathTrailColor,
-      strokeWeight: 2,
-      strokeOpacity: 0.8
+      strokeWeight: 4,
+      strokeOpacity: 0.5
     });
     activePolylines.push(polyline);
     return polyline.setMap(map);
@@ -94,7 +227,7 @@
 
   createIndividualPathTrail = function(value, PathId, historyData) {
     $("#load-spinner").fadeIn(800);
-    return $.getJSON("route-"+PathId+".json").done(function(json) {
+    return $.getJSON("routes/route-"+PathId+".json").done(function(json) {
       if (json.length !== 0) {
         _.map(json, function(onepath) {
             return addMapLine(onepath, value);
