@@ -204,7 +204,7 @@ def save_plot_ts(X, base_filename):
     else:
         N = len(X.columns)
 
-    fig = plt.figure(figsize=(30,3))
+    fig = plt.figure(figsize=(20, 2))
     for i in range(N):
         fig.clf()
         plt.plot(X[i], 'k-', linewidth=3)
@@ -224,4 +224,9 @@ def save_plot_ts(X, base_filename):
                     'Fri', '12:00',
                     'Sat', '12:00'])
         plt.xlim([0, 7*24-1])
-        plt.savefig(base_filename + str(i) + ".png", bbox_inches='tight', transparent=True)
+        ax = plt.gca()
+        ax.spines['right'].set_visible(False)
+        ax.spines['top'].set_visible(False)
+        ax.xaxis.set_ticks_position('bottom')
+        ax.yaxis.set_ticks_position('left')
+        plt.savefig(base_filename + str(i) + ".png", bbox_inches='tight', transparent=True, dpi=300)
