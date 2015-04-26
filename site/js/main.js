@@ -178,10 +178,31 @@
               +("00"+(Math.floor(255*b)).toString(16)).slice(-2));
   }
 
+  getColormapRed = function(v, vmin, vmax) {
+    var r=1.0,g=1.0,b=1.0,dv;
+    if (v < vmin)
+      v = vmin;
+    if (v > vmax)
+      v = vmax;
+    dv = vmax - vmin;
+    if (v < (vmin + 0.5 * dv)) {
+      r = (v-vmin)/(dv/2);
+      g = (v-vmin)/(dv/2);
+      b = 1.0;
+    } else {
+      r = 1.0;
+      g = 1.0 - 2*((v-vmin)/dv-0.5);
+      b = 1.0 - 2*((v-vmin)/dv-0.5);
+    }
+    return("#"+("00"+(Math.floor(255*r)).toString(16)).slice(-2)
+              +("00"+(Math.floor(255*g)).toString(16)).slice(-2)
+              +("00"+(Math.floor(255*b)).toString(16)).slice(-2));
+  }
+
 
   addMapLine = function(PathData, value) {
     var PathTrailColor, polyline, polylinePath;
-    PathTrailColor = getColormap(value,-1,1);
+    PathTrailColor = getColormapRed(value,-0.1,0.1);
     polylinePath = _.reduce(PathData, (function(accu, x) {
       accu.push(new google.maps.LatLng(x.coords[1], x.coords[0]));
       return accu;
