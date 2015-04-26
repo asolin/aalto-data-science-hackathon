@@ -331,6 +331,7 @@
       $(e.currentTarget).addClass("active");
       $("#visualization").removeClass("on");
       $("#explanation").html(""+$(e.currentTarget).data("description"));
+      $("#figure").attr("src",$(e.currentTarget).data("fig"));
       console.error("" + $(e.currentTarget).data("visualization") +
                          $(e.currentTarget).data("json") +
                          $(e.currentTarget).data("index") +
