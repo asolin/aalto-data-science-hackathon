@@ -56,8 +56,8 @@ def save_maps_to_json(X, filename):
     for i in range(len(X)):
         f.write('{')
         f.write('"id": {0}, "coords": [{1}, {2}], "value": ['.format(X.iloc[i].name,
-                                                                     X.iloc[i].coords[1],
-                                                                     X.iloc[i].coords[0]))
+                                                                     X.iloc[i].coords[0],
+                                                                     X.iloc[i].coords[1]))
         for j in range(len(X.iloc[i].values)-2):
             f.write('{0}, '.format(X.iloc[i][j]))
         f.write('{0}]'.format(X.iloc[i][j+1]))
@@ -81,8 +81,8 @@ def save_routes_to_json(X, filename):
         (from_stop, to_stop) = X.index[i].split('-')
         from_stop = int(from_stop)
         to_stop = int(to_stop)
-        f.write('"id": [{0}, {1}], "value": ['.format(from_stop,
-                                                      to_stop))
+        f.write('"id": [{0}, {1}], "value": ['.format(to_stop,
+                                                      from_stop))
         for j in range(len(X.iloc[i].values)-2):
             f.write('{0}, '.format(X.iloc[i][j]))
         f.write('{0}]'.format(X.iloc[i][j+1]))
