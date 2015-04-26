@@ -53,6 +53,24 @@ def save_json(ts, filename):
     with open(filename, 'w') as outfile:
         json.dump({"stops": x}, outfile)
 
+def save_multi_json(ts, filename):
+    values = {}
+    for row in ts:
+        sid = row[0]
+        hour = row[1]
+        val = row[2]
+        if str(sid) not in stop_coords:
+            print "Missing stop id:", sid
+            continue
+        if sid not in values:
+            values[sid] = [0] * 24
+        values[sid][hour-1] = val
+    x = []
+    for sid, vals in values.iteritems():
+        x.append({"id":sid, "coords":stop_coords[str(sid)], "value":vals})
+    with open(filename, 'w') as outfile:
+        json.dump({"stops": x}, outfile)
+
 def save_route_json(ts, filename):
     x = []
     for row in ts:
@@ -133,6 +151,17 @@ def get_route_dest_delay_matrix():
         f.write(",".join(route_strs) + '\n')
         for i in range(mat.shape[0]):
             f.write(",".join(map(str, mat[i,:])) + '\n')
+
+def analyze_day(day = "2014-08-22"):
+    hour = func.cast(func.substr(trips.c.joreohitusaika_time,1,2), sa.Integer)
+    cols = [trips.c.tulopysakki, hour, func.avg(trips.c.ohitusaika_ero).label('delay_avg')]
+    new_conds = conditions
+    new_conds.append(trips.c.tapahtumapaiva==day)
+    conds = and_(*new_conds)
+    groupcols = [trips.c.tulopysakki, hour]
+    ts = run(cols, conds, groupcols, n_limit=None)
+    save_multi_json(ts, "../site/hourly_stop_delays_%s.json" % day)
+    
 
 def get_delay_histogram():
     bucket = func.round(trips.c.ohitusaika_ero/10)*10
