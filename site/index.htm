@@ -44,14 +44,31 @@
     </div>
     <nav id="time-filters">
       <ol role="navigation">
-        <li data-visualization="heatmap" data-json="stop_1.json" data-index="0" data-description="No info yet!" data-fig="" class="active">Bus stop density</li>
-        <li data-visualization="routemap" data-json="routes.json" data-index="0" data-description="No info yet!" data-fig="">Route delay</li>
-        <li data-visualization="routemap" data-json="route_dest_delay_pca.json" data-index="0" data-description="No info yet!" data-fig="route_dest_delay_pca_0.png">Route delay PCA 1</li>
-        <li data-visualization="routemap" data-json="route_dest_delay_pca.json" data-index="1" data-description="No info yet!" data-fig="route_dest_delay_pca_1.png">Route delay PCA 2</li>
-        <li data-visualization="routemap" data-json="route_dest_delay_pca.json" data-index="2" data-description="No info yet!" data-fig="route_dest_delay_pca_2.png">Route delay PCA 3</li>
-        <li data-visualization="heatmap" data-json="cum_stop_times.json" data-index="0" data-description="No info yet!" data-fig="">Bus stop traffic/time</li>
-        <li data-visualization="heatmap" data-json="stop_time_nmf.json" data-index="0" data-description="No info yet!" data-fig="stop_time_nmf_0.png">Bus stop time NMF 1</li>
-        <li data-visualization="heatmap" data-json="stop_time_nmf.json" data-index="1" data-description="No info yet!" data-fig="stop_time_nmf_1.png">Bus stop time NMF 2</li>
+        <li data-visualization="heatmap" data-json="stop_1.json" data-index="0" data-description="-" data-fig="empty.png" class="active">Bus stop density</li>
+        
+        <h2 class="no-top-margin">Bus stop traffic</h2>
+
+        <li data-visualization="heatmap" data-json="cum_stop_times.json" data-index="0" data-description="Bus stop times" data-fig="">Total</li>
+        
+        <li data-visualization="heatmap" data-json="stop_time_nmf.json" data-index="0" data-description="NMF component 1" data-fig="stop_time_nmf_0.png">From work</li>
+        
+        <li data-visualization="heatmap" data-json="stop_time_nmf.json" data-index="1" data-description="NMF component 2" data-fig="stop_time_nmf_1.png">To work</li>
+        
+        <li data-visualization="heatmap" data-json="stop_time_nmf.json" data-index="2" data-description="NMF component 3" data-fig="stop_time_nmf_2.png">Weekend day-time</li>
+        
+        <li data-visualization="heatmap" data-json="stop_time_nmf.json" data-index="3" data-description="NMF component 4" data-fig="stop_time_nmf_3.png">Weekday evening</li>
+        
+        <li data-visualization="heatmap" data-json="stop_time_nmf.json" data-index="4" data-description="NMF component 5" data-fig="stop_time_nmf_4.png">Weekday day-time</li>
+        
+        <li data-visualization="heatmap" data-json="stop_time_nmf.json" data-index="5" data-description="NMF component 6" data-fig="stop_time_nmf_5.png">Midnight</li>
+        
+        <h2 class="no-top-margin">Route delays</h2>
+        
+        <li data-visualization="routemap" data-json="route_dest_delay_pca.json" data-index="0" data-description="PCA component 1" data-fig="route_dest_delay_pca_0.png">Work</li>
+        
+        <li data-visualization="routemap" data-json="route_dest_delay_pca.json" data-index="1" data-description="PCA component 2" data-fig="route_dest_delay_pca_1.png">To work</li>
+        
+        <li data-visualization="routemap" data-json="route_dest_delay_pca.json" data-index="2" data-description="PCA component 3" data-fig="route_dest_delay_pca_2.png">Mid-day</li>
 
 <!--
         <li data-visualization="heatmap" data-json="stop_time_nmf.json" data-index="2">Bus stop time NMF 3</li> <br />
