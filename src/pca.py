@@ -1,3 +1,7 @@
+
+# Copyright (c) 2015 Jaakko Luttinen
+# GPL v3
+
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import ProjectedGradientNMF

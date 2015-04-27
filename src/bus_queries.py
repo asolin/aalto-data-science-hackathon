@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+
+# Copyright (c) 2015 Eric Malmi
+# GPL v3
+
 import sqlalchemy as sa
 from sqlalchemy.sql import func, and_
 import re

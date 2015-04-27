@@ -14,3 +14,32 @@ The web pages rendering the visualisations are under `site/`. The backend is bui
 ## Example
 
 You can try out the site by pointing your browser to: [http://asolin.github.io/aalto-data-science-hackathon/](http://asolin.github.io/aalto-data-science-hackathon/).
+
+## Copyright and License
+
+The package is available under the GNU General Public License Version 3.0.
+
+Below is a breakdown of the copyrights and licenses for different parts of the package.
+
+
+ * For the most part:
+
+   Copyright (c) 2015 Arno Solin, Eric Malmi, Jaakko Luttinen
+
+   License: GPL v3
+
+
+ * HTML and JS based on snowplow visualization:
+
+   Copyright (c) 2014 Sampsa Kuronen
+
+   License: GPL v3
+
+
+ * Python script for importing GTFS to Sqlite:
+
+   Copyright (c) 2010 Colin Bick, Robert Damphousse
+
+   License: MIT
+
+
