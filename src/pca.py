@@ -87,6 +87,7 @@ def save_routes_to_json(X, filename):
         to_stop = int(to_stop)
         f.write('"id": [{0}, {1}], "value": ['.format(to_stop,
                                                       from_stop))
+        j = -1
         for j in range(len(X.iloc[i].values)-2):
             f.write('{0}, '.format(X.iloc[i][j]))
         f.write('{0}]'.format(X.iloc[i][j+1]))
@@ -167,11 +168,16 @@ def analyse_routes(filename, K, method='pca'):
 
     # Scale values to [-1, 1]
     pca_routes = pca_routes / np.max(np.abs(pca_routes))
+    if method == 'pca':
+        mu = pd.DataFrame(mu/np.max(np.abs(mu)), columns=data.columns).T
 
     # Label PCA time series elements
     pca_timeseries = pd.DataFrame(A)
 
-    return (pca_routes, pca_timeseries)
+    if method == 'pca':
+        return (mu, pca_routes, pca_timeseries)
+    else:
+        return (pca_routes, pca_timeseries)
 
 
 def plot_ts(X):

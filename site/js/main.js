@@ -207,7 +207,8 @@
 
   addMapLine = function(PathData, value) {
     var PathTrailColor, polyline, polylinePath;
-    PathTrailColor = getColormapRed(value,-0.1,0.1);
+    PathTrailColor = getColormapRed(value,-0.2,0.2);
+    //PathTrailColor = getColormapRed(value,-0.1,0.1);
     polylinePath = _.reduce(PathData, (function(accu, x) {
       accu.push(new google.maps.LatLng(x.coords[1], x.coords[0]));
       return accu;
