@@ -14,17 +14,14 @@
 \usepackage[tight]{subfigure}
 \usepackage{hyphenat}
 
-%\usepackage[square,sort&compress,numbers]{natbib}
 \usepackage[round]{natbib}
 \bibliographystyle{plainnat}
-%\bibliographystyle{acm}
 
 \usepackage{booktabs}
 \usepackage{url}
 \usepackage{listings}
 \usepackage{color}
 \usepackage{listingsutf8}
-%\usepackage[babel]{csquotes}
 
 \usepackage{fancyhdr}
 \usepackage{lastpage}
@@ -54,8 +51,6 @@
 \linespread{1.05}
 \usepackage[scaled]{beramono}
 
-% 'Parannellaan' float-paketin avulla figure ja table-ympäristöt
-% tukemaan paikotusta 'H' = Here.
 \restylefloat{figure}
 \floatstyle{plaintop}
 \restylefloat{table}
@@ -72,39 +67,28 @@
         commentstyle=\color[rgb]{0.2, 0.55, 0.55},
         stringstyle=\color[rgb]{0.75, 0.0, 0.0}
 }
-        %backgroundcolor=\color[rgb]{0.99, 0.97, 0.92},
 
 \lstset{frame=ttbt}
 
 \newcommand{\authorA}{Eric Malmi}
-
 \newcommand{\reporttitle}{ViBE: Visual Bus Data Exploration Tool}
-
 
 \title{\reporttitle}
 \author{\authorA}
 
-%\input{defines}
-
 \begin{document}
-
-%\renewcommand{\lstlistingname}{Listaus}
 
 \setlength{\abovecaptionskip}{10pt}
 \setlength{\belowcaptionskip}{10pt}
-%\setlength{\captionmargin}{1cm}
 \renewcommand{\captionlabelfont}{\bf}
 \newcommand{\eref}[1]{(\ref{#1})}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 
-%\begin{titlepage}
 \thispagestyle{empty}
 \begin{center}
 
-%\vspace*{1cm}
 \noindent\Large{Aalto Data Science Hackathon --- Final Report}\\
-%\noindent\LARGE{\textbf{Research Plan}}\\
 \vspace*{0.5cm}
 \HRule  \\
 \vspace*{0.3cm}
@@ -120,16 +104,6 @@ document}, and Arno Solin}\\
 \vspace*{0.5cm}
 
 \end{center}
-
-%  \begin{center}
-%  \rule{0.8\linewidth}{0.2mm}
-%  \begin{abstract}
-% The program solves the $k$-Path Motif Problem using an algorithm based
-% on multilinear sieving. The algorithm decides the existence of a solution in
-% time $\mathcal{O}(2^kkm)$ and finds the solution in time $\mathcal{O}(2^kknm)$.
-% \end{abstract}
-%  \rule{0.8\linewidth}{0.2mm}
-%  \end{center}
 
 \section{Introduction}
 
@@ -178,8 +152,9 @@ when stored in an SQLite database.
 
 \subsection{Front-end}
 
-The front-end of ViBE is implemented using JavaScript and Google Maps API. The 
-website design was inspired by the \url{http://www.auratkartalla.com/} web page.
+The front-end of ViBE is implemented using HTML5, JavaScript and Google Maps 
+API. The website design was inspired by the \url{http://www.auratkartalla.com/} 
+web page.
 
 ViBE features two different visualization modes, both having a map in the 
 background. The first mode shows a heat map of bus stops associated with some 
@@ -345,6 +320,5 @@ interesting to see, what kind of cascade effects are caused by special events,
 such as accidents or events attracting large crowds which can cause significant 
 delay spikes at a certain part of the traffic network.
 
-%\bibliography{sources}
 
 \end{document}
